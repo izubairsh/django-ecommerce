@@ -33,7 +33,7 @@ def index(request):
 def customer(request, pk):
     q = ''
     customer = Customer.objects.get(id=pk)
-    orders = customer.order_set.all().order_by('-date_ordered')
+    orders = customer.order_set.all().order_by('-date_created')
     total_orders = orders.count()
     if 'q' in request.GET:
         q = request.GET['q']

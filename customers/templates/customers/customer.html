@@ -89,7 +89,9 @@
                                         {% if orders %}
                                         {% for order in orders%}
                                         <tr>
-                                            <td><a href="">{{order.date_ordered|date:"M d, Y"}}</a></td>
+                                            <td><a
+                                                    href="{% url 'order' order.id%}">{{order.date_created|date:"M d, Y"}}</a>
+                                            </td>
                                             <td>{{order.get_cart_items}}</td>
                                             <td>{{order.advance}}</td>
                                             <td>{{order.get_cart_total}}</td>
