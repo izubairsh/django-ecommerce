@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title%} | Employee{% endblock%}
+{% block content %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Employee: {{employee.name|title}}</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'employees' %}">Employees</a></li>
+                        <li class="breadcrumb-item active">{{employee.name|title}}</li>
+                    </ol>
+                </div>
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <div class="content">
+        <div class="container-fluid">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-md">
+                        <div class="card card-body">
+                            <h5>Contact Information</h5>
+                            <hr>
+                            <p>CNIC: {{employee.cnic}}</p>
+                            <p>Phone: {{employee.phone}}</p>
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <div class="card card-body">
+                            <h5>Total Jobs</h5>
+                            <hr>
+                            <h1 style="text-align: center;padding: 10px">{{total_jobs}}</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header text-white bg-dark">
+                                <div class="row col-sm-12">
+                                    <h3>Jobs</h3>
+                                    <form class="form-inline col-sm-6 col-md-4" style="" method="GET">
+                                        <div class="input-group input-group-sm col-sm-12">
+                                            <input name="q" id="id_q" class="form-control form-control-navbar"
+                                                type="search" placeholder="Search" aria-label="Search"
+                                                value="{{query}}">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-navbar bg-light" type="submit">
+                                                    <i class="fas fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                    <div class="card-tools ml-auto mr-0 ">
+                                        <a class="btn btn-success" href="{% url 'create_job' employee.id%}">
+                                            Add New
+                                            <i class="fas fa-user-plus fa-fw"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body table-responsive p-0">
+                                <table class="table table-hover table-bordered" style="text-align: center; ">
+                                    <tbody>
+                                        <tr>
+                                            <th>Registered At</th>
+                                            <th colspan="2" scope="colgroup">Day1</th>
+                                            <th colspan="2" scope="colgroup">Day2</th>
+                                            <th colspan="2" scope="colgroup">Day3</th>
+                                            <th>Advance</th>
+                                            <th>Total</th>
+                                            <th>Remaining</th>
+                                            <th>Modify</th>
+                                        </tr>
+                                        <tr>
+                                            <th></th>
+                                            <th>Rate</th>
+                                            <th>Count</th>
+                                            <th>Rate</th>
+                                            <th>Count</th>
+                                            <th>Rate</th>
+                                            <th>Count</th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                        {% if jobs %}
+                                        {% for job in jobs%}
+                                        <tr>
+                                            <td>{{job.date_created|date:"M d, Y"}}</td>
+                                            <td>{{job.day1_rate}}</td>
+                                            <td>{{job.day1_count}}</td>
+                                            <td>{{job.day2_rate}}</td>
+                                            <td>{{job.day2_count}}</td>
+                                            <td>{{job.day3_rate}}</td>
+                                            <td>{{job.day3_count}}</td>
+                                            <td>{{job.advance}}</td>
+                                            <td>{{job.get_total}}</td>
+                                            <td>{{job.balance}}</td>
+
+                                            <td>
+                                                <a href="{% url 'update_job' job.id%}" class="btn text-info px-0">
+                                                    <i class="far fa-edit fa"></i>
+                                                </a>/
+                                                <a href="{% url 'delete_job' job.id%}" class="btn text-danger px-0">
+                                                    <i class="far fa-trash-alt fa"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+
+                                        {% endfor %}
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!--.card-body-->
+                            <div class="card-footer">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        {% if jobs.has_other_pages %}
+                                        <ul class="pagination">
+                                            {% if jobs.has_previous %}
+                                            <li class="page-item">
+                                                <a href="?page={{jobs.previous_page_number}}"
+                                                    class="page-link">&laquo;</a>
+                                            </li>
+                                            {% else %}
+                                            <li class="page-item disabled">
+                                                <a class="page-link">&laquo;</a>
+                                            </li>
+                                            {% endif %}
+                                            {% for i in jobs.paginator.page_range %}
+                                            {% if jobs.number == i %}
+                                            <li class="page-item active">
+                                                <a class="page-link">{{i}}</a>
+                                            </li>
+                                            {% else %}
+                                            <li class="page-item">
+                                                <a href="?page={{i}}" class="page-link">{{i}}</a>
+                                            </li>
+                                            {% endif %}
+                                            {% endfor %}
+                                            {% if jobs.has_next %}
+                                            <li class="page-item">
+                                                <a href="?page={{jobs.next_page_number}}" class="page-link">&raquo;</a>
+                                            </li>
+                                            {% else %}
+                                            <li class="page-item disabled">
+                                                <a class="page-link">&raquo;</a>
+                                            </li>
+                                            {% endif %}
+                                        </ul>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                </div>
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+
+{% endblock %}

@@ -1,0 +1,507 @@
+{% extends 'base.html' %}
+{% block title%} | Employees{% endblock%}
+{% block content %}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Store</h1>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <div class="content">
+        <div class="container-fluid">
+            <div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row mt-5">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header text-white bg-dark">
+                                        <div class="row col-sm-12">
+                                            <h3>Products</h3>
+                                            <form class="form-inline col-sm-6 col-md-4" method="GET">
+                                                <div class="input-group input-group-sm col-sm-12">
+                                                    <input data-action="search" name="q" id="id_q"
+                                                        class="form-control form-control-navbar search" type="search"
+                                                        placeholder="Search" aria-label="Search" value="{{query}}">
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-navbar bg-light" type="submit">
+                                                            <i class="fas fa-search"></i>
+                                                        </button>
+                                                    </div>
+                                                    <!-- select -->
+                                                    <div class="input-group input-group-sm col-sm-6">
+                                                        <select name="type" class="form-control form-control-navbar"
+                                                            onchange="this.form.submit()">
+                                                            {%for c in categories%}
+                                                            <option {% if type in c.name %} selected="selected"
+                                                                {%endif%} value="{{c}}">{{c}}
+                                                            </option>
+                                                            {%endfor%}
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body table-responsive p-0">
+                                        <table class="table table-hover">
+                                            <tbody>
+                                                <tr>
+                                                    <th>Image</th>
+                                                    <th>Token</th>
+                                                    <th>Cost</th>
+                                                    <th>Price</th>
+                                                    <th>Weight</th>
+                                                    <th>Meat</th>
+                                                    <th>Quantity</th>
+                                                    <th>Add to Cart</th>
+
+                                                </tr>
+
+                                                {% if products %}
+                                                {% for product in products%}
+                                                <tr>
+                                                    <td><a href="{% url 'product' product.id%}"><img
+                                                                style="width:100px; height:80px;"
+                                                                class="img-fluid img-thumbnail" alt="Sheep"
+                                                                src="{{product.imageURL}}"></a></td>
+
+                                                    <td>{{product.token}}</td>
+                                                    <td>{{product.cost}}</td>
+                                                    <td>{{product.price}}</td>
+                                                    <td>{{product.weight}}</td>
+                                                    <td>{{product.meat}}</td>
+                                                    <td>{{product.quantity}}</td>
+
+                                                    <td>
+                                                        <Button data-product_token="{{product.token}}"
+                                                            data-product_id="{{product.id}}"
+                                                            data-product_price="{{product.price}}"
+                                                            class="btn text-secondary px-0 add-cart"><i
+                                                                class="far fa-plus fa"></i></Button>
+                                                    </td>
+                                                </tr>
+
+                                                {% endfor %}
+                                                {% endif %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- /.card-body -->
+                                    <div class="card-footer">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                {% if products.has_other_pages %}
+                                                <ul class="pagination">
+                                                    {% if products.has_previous %}
+                                                    <li class="page-item">
+                                                        <a href="?page={{products.previous_page_number}}"
+                                                            class="page-link">&laquo;</a>
+                                                    </li>
+                                                    {% else %}
+                                                    <li class="page-item disabled">
+                                                        <a class="page-link">&laquo;</a>
+                                                    </li>
+                                                    {% endif %}
+                                                    {% for i in products.paginator.page_range %}
+                                                    {% if products.number == i %}
+                                                    <li class="page-item active">
+                                                        <a class="page-link">{{i}}</a>
+                                                    </li>
+                                                    {% else %}
+                                                    <li class="page-item">
+                                                        <a href="?page={{i}}" class="page-link">{{i}}</a>
+                                                    </li>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                    {% if products.has_next %}
+                                                    <li class="page-item">
+                                                        <a href="?page={{products.next_page_number}}"
+                                                            class="page-link">&raquo;</a>
+                                                    </li>
+                                                    {% else %}
+                                                    <li class="page-item disabled">
+                                                        <a class="page-link">&raquo;</a>
+                                                    </li>
+                                                    {% endif %}
+                                                </ul>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                        </div>
+
+                        <div class="row mt-5">
+                            <div class="col-12 ">
+                                <form action="{% url 'add_item' order.id%}" method="POST" class="col-12 m-auto"
+                                    id="myForm">
+                                    {% csrf_token %}
+                                    <div class="row">
+
+                                        <div class="col-md-12">
+                                            <input type="number" class="form-control" id="item_id" name="item_id"
+                                                value="0" hidden>
+                                            <input type="number" class="form-control" id="product_id" name="product_id"
+                                                value="0" hidden>
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <label for="product_token">Product Token</label>
+                                                        <input type="number" class="form-control" id="product_token"
+                                                            name="product_token" disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <label for="package">Package</label>
+                                                        <select class="form-control update-package" name="package"
+                                                            id="package">
+                                                            <option value="0">Select Package...</option>
+
+                                                            {% for package in packages%}
+                                                            <option value="{{package.id}}"
+                                                                data-price="{{package.price}}">
+                                                                {{package}} - {{package.category}}
+                                                            </option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-md-3" id="product_div">
+                                                    <div class="form-group">
+                                                        <label for="product_price">Price</label>
+                                                        <input type="number" class="form-control" id="product_price"
+                                                            name="product_price" disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 package-div">
+                                                    <div class="form-group">
+                                                        <label for="package_price">Price</label>
+                                                        <input type="number" class="form-control" id="package_price"
+                                                            name="package_price" disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <label for="discount">Discount</label>
+                                                        <input type="number" class="form-control" id="discount"
+                                                            name="discount" value="0">
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+
+                                                <div class="col-md-3">
+                                                    <div class="form-group package-div">
+                                                        <label for="leg">Leg</label>
+                                                        <select class="form-control " id="leg" name="leg">
+
+                                                            <option value="">----</option>
+                                                            <option value="1">1</option>
+                                                            <option value="2">2</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group package-div">
+                                                        <label for="shoulder">Shoulder</label>
+                                                        <select class="form-control" id="shoulder" name="shoulder">
+
+                                                            <option value="">----</option>
+                                                            <option value="1">1</option>
+                                                            <option value="2">2</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group package-div">
+                                                        <label for="exampleInputEmail1">Day</label>
+                                                        <select class="form-control" name="day" id="day">
+                                                            <option value="">Select Day...</option>
+                                                            <option value="1">1</option>
+                                                            <option value="2">2</option>
+                                                            <option value="3">3</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group package-div">
+                                                        <label for="exampleInputPassword1">Time</label>
+                                                        <select class="form-control" name="time" id="time">
+                                                            <option value="">Select time...</option>
+                                                            {%for time in times%}
+                                                            <option value="{{time.id}}">{{time}}</option>
+
+                                                            {%endfor%}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <button id="addToCart" type="submit" class="btn btn-success float-right">Add to
+                                        Cart</button>
+                                    <button data-action="clear" type="reset"
+                                        class="btn btn-danger float-right mr-2 update-cart">Clear</button>
+
+                                </form>
+                            </div>
+                        </div>
+                        <div class="row mt-5">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header text-white bg-dark">
+                                        <div class="row col-sm-12">
+                                            <h3>Cart</h3>
+
+                                        </div>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body table-responsive p-0">
+                                        <table class="table table-hover text-center mt-auto mb-auto">
+                                            <tbody>
+                                                <tr>
+                                                    <th>Token</th>
+                                                    <th>Type</th>
+                                                    <th>Package</th>
+                                                    <th>Day</th>
+                                                    <th>Time</th>
+                                                    <th>Leg</th>
+                                                    <th>Shoulder</th>
+                                                    <th>Quantity</th>
+                                                    <th>Price</th>
+                                                    <th>Discount</th>
+                                                    <th>Total</th>
+                                                    <th>Modify</th>
+                                                </tr>
+
+                                                {% if items %}
+                                                {% for item in items%}
+                                                <tr>
+                                                    {% if item.product %}
+                                                    <td>{{item.product.token}}</td>
+                                                    {% else %}
+                                                    <td>-</td>
+                                                    {%endif%}
+                                                    <td>{{item.category}}</td>
+
+                                                    {% if item.package %}
+                                                    <td>{{item.package}}</td>
+                                                    <td>{{item.day}}</td>
+                                                    <td>{{item.time}}</td>
+                                                    {% if item.leg %}
+                                                    <td>{{item.leg}}</td>
+                                                    {% else %}
+                                                    <td>-</td>
+                                                    {%endif%}
+                                                    {% if item.shoulder %}
+                                                    <td>{{item.shoulder}}</td>
+                                                    {% else %}
+                                                    <td>-</td>
+                                                    {%endif%}
+                                                    {% else %}
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    {% endif %}
+                                                    <td>
+                                                        <Button data-item="{{item.id}}" data-action="remove"
+                                                            class="btn text-info px-0 update-cart"><i
+                                                                class="far fa-caret-left fa fa-2x"></i></Button>
+                                                        {{item.quantity}}
+                                                        <Button data-item="{{item.id}}" data-action="add"
+                                                            class="btn text-info px-0 update-cart"><i
+                                                                class="far fa-caret-right fa fa-2x"></i></Button>
+                                                    </td>
+                                                    <td>{{item.price}}</td>
+                                                    <td>{{item.discount}}</td>
+                                                    <td>{{item.get_total}}</td>
+
+                                                    <td>
+                                                        <Button data-item="{{item.id}}" data-action="edit"
+                                                            class="btn text-info px-0 update-cart"><i
+                                                                class="far fa-edit fa"></i></Button>
+                                                        /
+                                                        <Button data-item="{{item.id}}" data-action="delete"
+                                                            class="btn text-danger px-0 update-cart"><i
+                                                                class="far fa-trash-alt fa"></i></Button>
+                                                    </td>
+
+                                                </tr>
+
+                                                {% endfor %}
+                                                {% endif %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- /.card-body -->
+                                    <div class="card-footer">
+
+                                    </div>
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row mt-5">
+                            <div class="col-md">
+                                <div class="card card-body">
+                                    <h5><strong>No of items:</strong>&nbsp;{{order.get_cart_items}}</h5>
+                                    <h5><strong>Sub Total:</strong>&nbsp;{{order.get_cart_total}}</h5>
+                                    <h5><strong>Discount:</strong>&nbsp;{{order.get_discount}}</h5>
+                                    <h5><strong>Total:</strong>&nbsp;{{order.get_cart_total}}</h5>
+                                    <hr>
+                                    <h5><strong>Payments Total:</strong>&nbsp;{{order.get_total_paid}}</h5>
+                                    <h5><strong>Amount Due:</strong>&nbsp;{{order.get_balance}}</h5>
+                                    <div class="card card-body mt-3">
+
+                                        <form action="{% url 'add_trans' order.id %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <label for="amount">Amount</label>
+                                                <input type="number" value="{{order.advance}}" class="form-control"
+                                                    id="amount" name="amount">
+                                            </div>
+                                            <button type="submit" class="btn btn-success float-right">Add Pay</button>
+
+                                        </form>
+                                        {%if transactions%}
+                                        <div class="table-responsive mt-3">
+                                            <table class="table text-center">
+                                                <tbody>
+                                                    <tr>
+                                                        <th>Del</th>
+                                                        <th>Amount</th>
+                                                        <th>Date</th>
+                                                    </tr>
+                                                    {%for transaction in transactions%}
+                                                    <tr>
+                                                        <td><a href="{% url 'delete_trans' transaction.id %}"
+                                                                class="btn text-secondary px-0"><i
+                                                                    class="far fa-trash-alt fa red"></i></a></td>
+                                                        <td>{{transaction.amount}}</td>
+                                                        <td>{{transaction.date_created|date:"M d, Y"}}</td>
+                                                    </tr>
+                                                    {%endfor%}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        {%endif%}
+                                    </div>
+                                    {% if 'update' in request.path%}
+                                    <input type="number" class="form-control" name="update" value="1" hidden>
+                                    <a href="{% url 'orders' %}" class="btn btn-success btn-block">Update</a>
+                                    {%else%}
+                                    <a href="{% url 'checkout' %}" class="btn btn-success btn-block">Complete</a>
+                                    {%endif%}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+<script type="text/javascript">
+
+    var addBtns = document.getElementsByClassName('add-cart')
+    var packageBtns = document.getElementsByClassName('update-package')
+
+    var packageDivs = document.getElementsByClassName('package-div')
+
+    for (i = 0; i < packageBtns.length; i++) {
+        packageBtns[i].addEventListener('change', function () {
+            s1 = document.getElementById("package");
+            price = s1.options[s1.selectedIndex].dataset['price']
+            document.getElementById("package_price").value = price;
+            p1 = 0;
+            if (s1)
+                p1 = s1.options[s1.selectedIndex].value;
+            if (p1 == 0) {
+                document.getElementById("day").required = false;
+                document.getElementById("time").required = false;
+                document.getElementById("product_div").style.display = "block";
+                for (i = 0; i < packageDivs.length; i++) {
+                    packageDivs[i].style.display = "none";
+                }
+            } else {
+                document.getElementById("day").required = true;
+                document.getElementById("time").required = true;
+                document.getElementById("product_div").style.display = "none";
+                for (i = 0; i < packageDivs.length; i++) {
+                    var temp = packageDivs[i];
+                    temp.style.display = "block";
+                }
+            }
+        })
+    }
+
+    for (i = 0; i < addBtns.length; i++) {
+        addBtns[i].addEventListener('click', function () {
+            var id = this.dataset.product_id
+            var token = this.dataset.product_token
+            var price = this.dataset.product_price
+            document.getElementById("product_id").value = id;
+            document.getElementById("product_token").value = token;
+            document.getElementById("product_price").value = price;
+        })
+    }
+
+
+    var updateBtns = document.getElementsByClassName('update-cart')
+
+    for (i = 0; i < updateBtns.length; i++) {
+        updateBtns[i].addEventListener('click', function () {
+            var itemId = this.dataset.item
+            var action = this.dataset.action
+
+            clearAll();
+            if (user == 'AnonymousUser') {
+                console.log('USER:', user)
+
+            } else {
+                if (action == 'clear') {
+                    document.querySelector('#addToCart').innerText = 'Add to Cart';
+                } else {
+                    updateUserOrder(itemId, action)
+                }
+            }
+        })
+    }
+
+
+    clearAll();
+</script>
+
+{% endblock %}

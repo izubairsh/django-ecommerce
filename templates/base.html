@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'css/adminlte.min.css' %}">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Qadri Meat {% block title %}{% endblock %}</title>
+    <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />
+
+    <script type="text/javascript">
+        var user = '{{request.user}}'
+
+        function getToken(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getToken('csrftoken')
+
+    </script>
+</head>
+
+<body class="hold-transition sidebar-mini sidebar-collapse">
+    <div class="wrapper">
+        {% include 'partials/_navbar.html' %}
+        {% block content %} {% endblock %}
+        {% include 'partials/_footer.html' %}
+    </div>
+    <!-- REQUIRED SCRIPTS -->
+
+    <!-- jQuery -->
+    <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+    <!-- Bootstrap 4 -->
+    <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <!-- AdminLTE App -->
+    <script src="{% static 'js/adminlte.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+
+</body>
+
+</html>

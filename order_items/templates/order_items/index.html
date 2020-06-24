@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title%} | Items{% endblock%}
+{% block content %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Items</h1>
+
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <div class="content">
+        <div class="container-fluid">
+            <div class="">
+
+                <div class="row mt-5">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header text-white bg-dark">
+
+
+                                <form class="row" style="" method="GET">
+                                    <div class="col-md-6">
+                                        <div class="row">
+
+                                            <div class="input-group input-group-sm mr-1 col-6">
+                                                <input data-action="search" name="q" id="id_q"
+                                                    class="form-control form-control-navbar search" type="search"
+                                                    placeholder="Search" aria-label="Search" value="{{query}}">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-navbar bg-light" type="submit">
+                                                        <i class="fas fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="input-group input-group-sm w-auto">
+                                                <select class="form-control form-control-navbar" name="day"
+                                                    onchange="this.form.submit()">
+                                                    <option value="1" {% if '1' in day%} selected="selected" {%endif%}>
+                                                        Day 1</option>
+                                                    <option value="2" {% if '2' in day%} selected="selected" {%endif%}>
+                                                        Day 2</option>
+                                                    <option value="3" {% if '3' in day%} selected="selected" {%endif%}>
+                                                        Day 3</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-tools ml-auto mr-0 ">
+                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                            <label class="btn bg-olive active">
+                                                <input type="radio" name="status" id="complete" autocomplete="off"
+                                                    {% if 'complete' in status%} checked="true" {%endif%}
+                                                    value="complete" onclick="this.form.submit()">
+                                                Complete
+                                            </label>
+                                            <label class="btn bg-olive">
+                                                <input type="radio" name="status" id="processing" autocomplete="off"
+                                                    {% if 'processing' in status%} checked="true" {%endif%}
+                                                    value="processing" onclick="this.form.submit()">
+                                                Processing
+                                            </label>
+                                            <label class="btn bg-olive">
+                                                <input type="radio" name="status" id="ready" autocomplete="off"
+                                                    {% if 'ready' in status%} checked="true" {%endif%} value="ready"
+                                                    onclick="this.form.submit()">
+                                                Ready
+                                            </label>
+                                            <label class="btn bg-olive">
+                                                <input type="radio" name="status" id="delivered" autocomplete="off"
+                                                    {% if 'delivered' in status%} checked="true" {%endif%}
+                                                    value="delivered" onclick="this.form.submit()">
+                                                Delivered
+                                            </label>
+                                        </div>
+
+                                </form>
+
+                            </div>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body table-responsive p-0">
+                            <table class="table table-hover text-center">
+                                <tbody>
+                                    <tr>
+                                        <th>Order</th>
+                                        <th>Token</th>
+                                        <th>Package</th>
+                                        <th>
+                                            Delivery Day<br>
+                                        </th>
+                                        <th>Delivery Time<br>
+                                        </th>
+                                        <th>Leg</th>
+                                        <th>Shoulder</th>
+                                        <th></th>
+                                    </tr>
+
+                                    {% if items %}
+                                    {% for item in items%}
+                                    <tr>
+                                        <td><a href="">{{item.order}}</a></td>
+                                        <td><a href="">{{item.product.token}}</a></td>
+                                        {% if item.package %}
+                                        <td>{{item.package}}</td>
+                                        <td>{{item.day}}</td>
+                                        <td>{{item.time}}</td>
+                                        {%else%}
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        {%endif%}
+                                        <td>{{item.leg}}</td>
+                                        <td>{{item.shoulder}}</td>
+                                        <td>
+                                            {% if not 'delivered' in status%}
+                                            <form method="POST">
+                                                {%csrf_token%}
+                                                <input hidden name="id" value="{{item.id}}" />
+                                                <input hidden name="status" value="{{status}}" />
+                                                <button type="submit" class="btn text-success"><i
+                                                        class="fas fa-arrow-right"></i></button>
+                                            </form>
+                                            {%endif%}
+                                        </td>
+                                    </tr>
+
+                                    {% endfor %}
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {% if items.has_other_pages %}
+                                    <ul class="pagination">
+                                        {% if items.has_previous %}
+                                        <li class="page-item">
+                                            <a href="?page={{items.previous_page_number}}" class="page-link">&laquo;</a>
+                                        </li>
+                                        {% else %}
+                                        <li class="page-item disabled">
+                                            <a class="page-link">&laquo;</a>
+                                        </li>
+                                        {% endif %}
+                                        {% for i in items.paginator.page_range %}
+                                        {% if items.number == i %}
+                                        <li class="page-item active">
+                                            <a class="page-link">{{i}}</a>
+                                        </li>
+                                        {% else %}
+                                        <li class="page-item">
+                                            <a href="?page={{i}}" class="page-link">{{i}}</a>
+                                        </li>
+                                        {% endif %}
+                                        {% endfor %}
+                                        {% if items.has_next %}
+                                        <li class="page-item">
+                                            <a href="?page={{items.next_page_number}}" class="page-link">&raquo;</a>
+                                        </li>
+                                        {% else %}
+                                        <li class="page-item disabled">
+                                            <a class="page-link">&raquo;</a>
+                                        </li>
+                                        {% endif %}
+                                    </ul>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+
+{% endblock %}

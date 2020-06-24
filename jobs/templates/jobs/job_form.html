@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% block title%} | Add Job{% endblock%}
+{% block content %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Add Job</h1>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <div class="content">
+        <div class="container-fluid">
+            <div class="container">
+                <div class="row mt-5">
+                    <div class="col-md-6 m-auto">
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            {{form|crispy}}
+                            <div class="row float-right mt-2">
+                                {% if 'update' in request.path %}
+                                <button type="submit" class="btn btn-success mr-2">Update</button>
+                                {% else %}
+                                <button type="submit" class="btn btn-success mr-2">Create</button>
+                                {% endif %}
+                                <a href="{% url 'employees' %}" class="btn btn-danger">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+{% endblock %}

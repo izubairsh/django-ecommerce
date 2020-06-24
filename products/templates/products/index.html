@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title%} | Products{% endblock%}
+{% block content %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Products</h1>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <div class="content">
+        <div class="container-fluid">
+            <div class="container">
+                <div class="row mt-5">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header text-white bg-dark">
+                                <div class="row col-sm-12">
+                                    <form class="form-inline col-sm-6 col-md-4" style="" method="GET">
+                                        <div class="input-group input-group-sm col-sm-12">
+                                            <input data-action="search" name="q" id="id_q"
+                                                class="form-control form-control-navbar search" type="search"
+                                                placeholder="Search" aria-label="Search" value="{{query}}">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-navbar bg-light" type="submit">
+                                                    <i class="fas fa-search"></i>
+                                                </button>
+                                            </div>
+                                            <!-- select -->
+                                            <div class="input-group input-group-sm col-sm-6">
+                                                <select name="type" class="form-control form-control-navbar"
+                                                    onchange="this.form.submit()">
+                                                    {%for c in categories%}
+                                                    <option {% if type in c.name %} selected="selected" {%endif%}
+                                                        value="{{c}}">{{c}}
+                                                    </option>
+                                                    {%endfor%}
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                    <div class="card-tools ml-auto mr-0 ">
+                                        <a class="btn btn-success" href="{% url 'create_product' %}">
+                                            Add New
+                                            <i class="fas fa-user-plus fa-fw"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body table-responsive p-0">
+                                <table class="table table-hover">
+                                    <tbody>
+                                        <tr>
+                                            <th>Image</th>
+                                            <th>Token</th>
+                                            <th>Cost</th>
+                                            <th>Price</th>
+                                            <th>Weight</th>
+                                            <th>Meat</th>
+                                            <th>Modify</th>
+
+                                        </tr>
+
+                                        {% if products %}
+                                        {% for product in products%}
+                                        <tr>
+                                            <td><a href="{% url 'product' product.id%}"><img
+                                                        style="width:100px; height:80px;"
+                                                        class="img-fluid img-thumbnail" alt="Sheep"
+                                                        src="{{product.imageURL}}"></a></td>
+
+                                            <td>{{product.token}}</td>
+                                            <td>{{product.cost}}</td>
+                                            <td>{{product.price}}</td>
+                                            <td>{{product.weight}}</td>
+                                            <td>{{product.meat}}</td>
+
+                                            <td>
+                                                <a href="{% url 'update_product' product.id %}"
+                                                    class="btn text-secondary px-0">
+                                                    <i class="far fa-edit fa"></i>
+                                                </a>
+                                                /
+                                                <a href="{% url 'delete_product' product.id %}"
+                                                    class="btn text-secondary px-0">
+                                                    <i class="far fa-trash-alt text-danger fa"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+
+                                        {% endfor %}
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-footer">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        {% if products.has_other_pages %}
+                                        <ul class="pagination">
+                                            {% if products.has_previous %}
+                                            <li class="page-item">
+                                                <a href="?page={{products.previous_page_number}}"
+                                                    class="page-link">&laquo;</a>
+                                            </li>
+                                            {% else %}
+                                            <li class="page-item disabled">
+                                                <a class="page-link">&laquo;</a>
+                                            </li>
+                                            {% endif %}
+                                            {% for i in products.paginator.page_range %}
+                                            {% if products.number == i %}
+                                            <li class="page-item active">
+                                                <a class="page-link">{{i}}</a>
+                                            </li>
+                                            {% else %}
+                                            <li class="page-item">
+                                                <a href="?page={{i}}" class="page-link">{{i}}</a>
+                                            </li>
+                                            {% endif %}
+                                            {% endfor %}
+                                            {% if products.has_next %}
+                                            <li class="page-item">
+                                                <a href="?page={{products.next_page_number}}"
+                                                    class="page-link">&raquo;</a>
+                                            </li>
+                                            {% else %}
+                                            <li class="page-item disabled">
+                                                <a class="page-link">&raquo;</a>
+                                            </li>
+                                            {% endif %}
+                                        </ul>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                </div>
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load static %}
+{% block title%} | Products{% endblock%}
+{% block content %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Token: {{product.token|title}}</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'products' %}">Products</a></li>
+                        <li class="breadcrumb-item active">{{product.token|title}}</li>
+                    </ol>
+                </div>
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <div class="content">
+        <div class="container-fluid">
+            <div class="container">
+                <div class="card mt-3 mb-3">
+                    <div class="row">
+
+
+                        <!--Grid column-->
+                        <div class="col-md-6 center-block p-4">
+
+                            <img src="{{product.imageURL}}" class="img-fluid img-thumbnail" alt="">
+
+                        </div>
+                        <!--Grid column-->
+
+                        <!--Grid column-->
+                        <div class="col-md-6">
+
+                            <!--Content-->
+                            <div class="p-4 m-1">
+                                <h3 class="mb-3">Product Description</h3>
+                                <h5>Cost: {{product.cost}}</h5>
+                                <h5>Price: {{product.price}}</h5>
+                                <h5>Weight: {{product.weight}}Kg</h5>
+                                <h5>Meat: {{product.meat}}Kg</h5>
+                                <a href="{% url 'update_product' product.id %}"
+                                    class="btn btn-block btn-outline-info btn-md mt-3">Update</a>
+                                <a href="{% url 'delete_product' product.id %}"
+                                    class="btn btn-block btn-outline-danger btn-md mt-1">Delete</a>
+
+
+                            </div>
+                            <!--Content-->
+
+                        </div>
+                        <!--Grid column-->
+
+                    </div>
+                </div>
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+
+{% endblock %}
