@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'hhgv22qvqyl($(7^@s!8p$oro1m6-gavjlszfejsqsmthef=$@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['qadrimeat.herokuapp.com', '127.0.0.1']
 
@@ -139,7 +139,7 @@ USE_TZ = True
 
 # STATICFILES_STORAGE = 'whitenoise.storage.GzipManifestStaticFilesStorage'
 
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # STATIC_TMP = os.path.join(BASE_DIR, 'static')
 
 STATIC_URL = '/static/'
