@@ -36,10 +36,8 @@ class OrderItem(models.Model):
                            max_length=1, null=True, blank=True)
     time = models.ForeignKey(
         Time, on_delete=models.PROTECT, null=True, blank=True)
-    leg = models.CharField(choices=COUNT_CHOICES,
-                           max_length=1, null=True, blank=True)
-    shoulder = models.CharField(choices=COUNT_CHOICES,
-                                max_length=1, null=True, blank=True)
+    leg = models.CharField(max_length=1, null=True, blank=True)
+    shoulder = models.CharField(max_length=1, null=True, blank=True)
 
     discount = models.IntegerField(default=0, null=True, blank=False)
     complete = models.BooleanField(default=False)

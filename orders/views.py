@@ -84,7 +84,6 @@ def order_form(request, pk=0):
         except Order.DoesNotExist:
             order = None
 
-    order.date_created = datetime.now()
     order.save()
     q = ''
     categories = Category.objects.all()
@@ -167,6 +166,8 @@ def invoice(request):
     data = cart_data(request)
     cart_items = data['cart_items']
     order = data['order']
+    order.date_created = datetime.now()
+    order.save()
     items = data['items']
     context = {'items': items, 'order': order, 'cart_items': cart_items}
     return render(request, 'orders/invoice.html', context)
@@ -281,53 +282,62 @@ def add_item(request, pk):
         except Package.DoesNotExist:
             package = None
 
-        try:
-            product = Product.objects.get(id=product_id)
-        except Product.DoesNotExist:
+        if not product_id == "":
+            try:
+                product = Product.objects.get(id=product_id)
+            except Product.DoesNotExist:
+                product = None
+        else:
             product = None
-
         if product and package:
             if not product.category == package.category:
-                return redirect('create_order', pk=pk)
-
+                if 'update' in request:
+                    return redirect('create_order', pk=pk)
+                else:
+                    return redirect('create_order')
         if product or package:
             try:
                 order_item = OrderItem.objects.get(id=item_id)
-                if order_item.delivered:
-                    return redirect('create_order', pk=pk)
-                if order_item.product:
-                    if not order_item.product.id == product_id:
-                        product1 = Product.objects.get(
-                            id=order_item.product.id)
-                        product1.quantity += 1
-                        product1.available = True
-                        product1.save()
             except OrderItem.DoesNotExist:
                 order_item = OrderItem(order=order)
-            if product:
-                if product.quantity < order_item.quantity:
+            if order_item.delivered:
+                if 'update' in request:
                     return redirect('create_order', pk=pk)
+                else:
+                    return redirect('create_order')
+            if product:
+                if order_item.product:
+                    if not order_item.product.id == product.id:
+                        product1 = Product.objects.get(
+                            id=order_item.product.id)
+                        product1.quantity += order_item.quantity
+                        product1.available = True
+                        product1.save()
+                        order_item.product = None
+                if not order_item.product:
+                    if order_item.quantity <= product.quantity:
+                        order_item.product = product
+                        order_item.price = product.price
+                        order_item.category = product.category
+                        product.quantity -= order_item.quantity
+                        if product.quantity == 0:
+                            product.available = False
+                    product.save()
             order_item.package = package
-            order_item.product = product
             order_item.day = day
             order_item.time = time
             order_item.leg = leg
             order_item.shoulder = shoulder
             order_item.discount = discount
-            if product:
-                order_item.price = product.price
-                order_item.category = product.category
-                if not product.quantity == 0:
-                    product.quantity -= 1
-                if product.quantity == 0:
-                    product.available = False
-                product.save()
             if package:
                 order_item.price = package.price
                 order_item.category = package.category
             order_item.save()
-        print("Item Saved")
-        return redirect('create_order', pk=pk)
+            print("Item Saved")
+        if 'update' in request:
+            return redirect('create_order', pk=pk)
+        else:
+            return redirect('create_order')
 
 
 @login_required(login_url='login')
@@ -384,3 +394,30 @@ def update_item(request):
             }
             return JsonResponse(response, safe=False)
     return JsonResponse("no action", safe=False)
+
+
+# if order_item.product:
+#                 if not order_item.product.id == product.id
+#                     product1 = Product.objects.get(
+#                         id=order_item.product.id)
+#                     product1.quantity += order_item.quantity
+#                     product1.available = True
+#                     product1.save()
+#                     order_item.price = product.price
+#                     order_item.category = product.category
+#                     if not product.quantity == 0:
+#                         product.quantity -= order_item.quantity
+#                     if product.quantity == 0:
+#                         product.available = False
+#                     product.save()
+#                     order_item.product = product
+#             else:
+#             if product:
+#                 order_item.price = product.price
+#                 order_item.category = product.category
+#                 if not product.quantity == 0:
+#                     product.quantity -= order_item.quantity
+#                 if product.quantity == 0:
+#                     product.available = False
+#                 product.save()
+#                 order_item.product = product
