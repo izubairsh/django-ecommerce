@@ -78,6 +78,8 @@ def order_form(request, pk=0):
     # Get Order
     if pk == 0:
         order, created = Order.objects.get_or_create(user=user, complete=False)
+        order.date_created = datetime.now()
+        order.save()
     else:
         try:
             order = Order.objects.get(id=pk)
