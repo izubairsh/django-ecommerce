@@ -64,18 +64,6 @@
                                                 Complete
                                             </label>
                                             <label class="btn bg-olive">
-                                                <input type="radio" name="status" id="processing" autocomplete="off"
-                                                    {% if 'processing' in status%} checked="true" {%endif%}
-                                                    value="processing" onclick="this.form.submit()">
-                                                Processing
-                                            </label>
-                                            <label class="btn bg-olive">
-                                                <input type="radio" name="status" id="ready" autocomplete="off"
-                                                    {% if 'ready' in status%} checked="true" {%endif%} value="ready"
-                                                    onclick="this.form.submit()">
-                                                Ready
-                                            </label>
-                                            <label class="btn bg-olive">
                                                 <input type="radio" name="status" id="delivered" autocomplete="off"
                                                     {% if 'delivered' in status%} checked="true" {%endif%}
                                                     value="delivered" onclick="this.form.submit()">
@@ -108,8 +96,8 @@
                                     {% if items %}
                                     {% for item in items%}
                                     <tr>
-                                        <td><a href="">{{item.order}}</a></td>
-                                        <td><a href="">{{item.product.token}}</a></td>
+                                        <td><a href="{% url 'order' item.order.id%}">{{item.order}}</a></td>
+                                        <td><a href="{% url 'product' item.product.id%}">{{item.product.token}}</a></td>
                                         {% if item.package %}
                                         <td>{{item.package}}</td>
                                         <td>{{item.day}}</td>
@@ -122,7 +110,9 @@
                                         <td>{{item.leg}}</td>
                                         <td>{{item.shoulder}}</td>
                                         <td>
-                                            {% if not 'delivered' in status%}
+                                            {% if not 'delivered' in status %}
+
+                                            {% if 'complete' in status and not item.delivered%}
                                             <form method="POST">
                                                 {%csrf_token%}
                                                 <input hidden name="id" value="{{item.id}}" />
@@ -130,6 +120,7 @@
                                                 <button type="submit" class="btn text-success"><i
                                                         class="fas fa-arrow-right"></i></button>
                                             </form>
+                                            {%endif%}
                                             {%endif%}
                                         </td>
                                     </tr>

@@ -17,13 +17,6 @@ def index(request):
         if item:
             status = request.POST['status']
             if status == 'complete':
-                item.complete = False
-                item.processing = True
-            elif status == 'processing':
-                item.processing = False
-                item.ready = True
-            elif status == 'ready':
-                item.ready = False
                 item.delivered = True
             item.save()
     q = ''
@@ -37,11 +30,6 @@ def index(request):
     if status == 'complete':
         items = OrderItem.objects.order_by(
             'time').filter(complete=True, day=day)
-    elif status == 'processing':
-        items = OrderItem.objects.order_by(
-            'time').filter(processing=True, day=day)
-    elif status == 'ready':
-        items = OrderItem.objects.order_by('time').filter(ready=True, day=day)
     elif status == 'delivered':
         items = OrderItem.objects.order_by(
             'time').filter(delivered=True, day=day)

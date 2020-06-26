@@ -74,7 +74,7 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body table-responsive p-0">
-                                <table class="table table-hover">
+                                <table class="table table-hover text-center">
                                     <tbody>
                                         <tr>
                                             <th>Date Ordered</th>
@@ -82,8 +82,8 @@
                                             <th>Advance</th>
                                             <th>Total</th>
                                             <th>Balance</th>
-                                            <th>Modify</th>
-                                            <th>Make Refund</th>
+                                            <th>Delivered</th>
+                                            <th>Refund</th>
                                         </tr>
 
                                         {% if orders %}
@@ -93,19 +93,21 @@
                                                     href="{% url 'order' order.id%}">{{order.date_created|date:"M d, Y"}}</a>
                                             </td>
                                             <td>{{order.get_cart_items}}</td>
-                                            <td>{{order.advance}}</td>
+                                            <td>{{order.get_total_paid}}</td>
                                             <td>{{order.get_cart_total}}</td>
-                                            <td>{{order.balance}}</td>
+                                            <td>{{order.get_balance}}</td>
                                             <td>
-                                                <a href="" class="btn text-info px-0">
-                                                    <i class="far fa-edit fa"></i>
-                                                </a>
+                                                {%if order.get_status%}
+                                                <i class="fa fa-check green"></i>
+                                                {%else%}
+                                                <i class="fa fa-times red"></i>
+                                                {%endif%}
                                             </td>
-                                            <td>
-                                                <a href="" class="btn btn-outline-info">
-                                                    <i class="far fa-edit fa"></i>Refund
-                                                </a>
-                                            </td>
+                                            <td>{%if order.refund%}
+                                                <i class="fa fa-check green"></i>
+                                                {%else%}
+                                                <i class="fa fa-times red"></i>
+                                                {%endif%}</td>
                                         </tr>
 
                                         {% endfor %}

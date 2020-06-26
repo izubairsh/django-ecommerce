@@ -258,9 +258,6 @@ def add_item(request, pk):
         order = Order.objects.get(id=pk)
     except Order.DoesNotExist:
         order = None
-    if not order.complete:
-        pk = 0
-
     if request.POST and order:
         item_id = request.POST['item_id']
         product_id = request.POST['product_id']
@@ -293,7 +290,7 @@ def add_item(request, pk):
             product = None
         if product and package:
             if not product.category == package.category:
-                if 'update' in request:
+                if order.complete:
                     return redirect('create_order', pk=pk)
                 else:
                     return redirect('create_order')
@@ -303,7 +300,7 @@ def add_item(request, pk):
             except OrderItem.DoesNotExist:
                 order_item = OrderItem(order=order)
             if order_item.delivered:
-                if 'update' in request:
+                if order.complete:
                     return redirect('create_order', pk=pk)
                 else:
                     return redirect('create_order')
@@ -325,6 +322,9 @@ def add_item(request, pk):
                         if product.quantity == 0:
                             product.available = False
                     product.save()
+                order_item.complete = True
+            else:
+                order_item.complete = False
             order_item.package = package
             order_item.day = day
             order_item.time = time
@@ -336,7 +336,8 @@ def add_item(request, pk):
                 order_item.category = package.category
             order_item.save()
             print("Item Saved")
-        if 'update' in request:
+        print('update' in request)
+        if order.complete:
             return redirect('create_order', pk=pk)
         else:
             return redirect('create_order')
