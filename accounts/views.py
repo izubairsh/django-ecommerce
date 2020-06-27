@@ -57,13 +57,15 @@ def dashboard(request):
 
     cost = cost1 = total = new_order = 0
     for o in orders:
-        if today.month == o.date_created.month:
-            cost1 += o.get_cost
-            total += o.get_total_paid
+        if o.date_created:
+            if today.month == o.date_created.month:
+                cost1 += o.get_cost
+                total += o.get_total_paid
         if not o.get_status:
             new_order += 1
 
     for product in products:
+        if product.date_created
         if today.month == product.date_created.month:
             cost += product.cost
     items = OrderItem.objects.all().filter(product=None)
