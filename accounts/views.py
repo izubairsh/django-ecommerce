@@ -65,9 +65,9 @@ def dashboard(request):
             new_order += 1
 
     for product in products:
-        if product.date_created
-        if today.month == product.date_created.month:
-            cost += product.cost
+        if product.date_created:
+            if today.month == product.date_created.month:
+                cost += product.cost
     items = OrderItem.objects.all().filter(product=None)
     packages = Package.objects.all()
     arr = []
