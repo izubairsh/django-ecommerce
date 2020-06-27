@@ -60,6 +60,7 @@
                                             <th>Name</th>
                                             <th>Phone</th>
                                             <th>Address</th>
+                                            <th>Sub Total</th>
                                             <th>Discount</th>
                                             <th>Total</th>
                                             <th>Paid</th>
@@ -98,6 +99,7 @@
                                             <td>{{order.customer.name}}</td>
                                             <td>{{order.customer.phone}}</td>
                                             <td>{{order.customer.address}}</td>
+                                            <td>{{order.get_sub_total}}</td>
                                             <td>{{order.get_discount}}</td>
                                             <td>{{order.get_cart_total}}</td>
                                             <td>{{order.get_total_paid}}</td>
@@ -119,14 +121,9 @@
                                                 <a href="{% url 'order' order.id%}" class="btn text-info px-0">
                                                     <i class="fa fa-eye "></i>
                                                 </a>
-                                                <a href="{% url 'create_order' order.id%}" class="btn text-info px-0">
-                                                    <i class="fa fa-edit "></i>
-                                                </a>
-                                                <a href="{% url 'order' order.id%}" class="btn text-info px-0">
-                                                    <i class="fa fa-print "></i>
-                                                </a>
-                                                <a href="{% url 'order' order.id%}" class="btn text-info px-0">
-                                                    <i class="fa fa-print "></i>
+                                                <a href="{% url 'create_order' order.id%}"
+                                                    class="btn text-secondary px-0">
+                                                    <i class="fa fa-edit"></i>
                                                 </a>
                                             </td>
                                         </tr>

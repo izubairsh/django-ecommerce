@@ -41,3 +41,6 @@ class Product(models.Model):
         except:
             pass
         super(Product, self).save(*args, **kwargs)
+
+    class Meta:
+        ordering = ['-id']

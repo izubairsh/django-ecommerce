@@ -241,7 +241,10 @@ def add_trans(request, pk):
         order = Order.objects.get(id=pk)
         transaction = Transaction.objects.create(order=order, amount=amount)
         transaction.save()
-    return redirect('create_order')
+    if order.complete:
+        return redirect('create_order', pk=order.id)
+    else:
+        return redirect('create_order')
 
 
 def delete_trans(request, pk):
@@ -250,7 +253,10 @@ def delete_trans(request, pk):
         transaction.delete()
     except Transaction.DoesNotExist:
         transaction = None
-    return redirect('create_order')
+    if transaction.order.complete:
+        return redirect('create_order', pk=transaction.order.id)
+    else:
+        return redirect('create_order')
 
 
 def add_item(request, pk):
@@ -298,7 +304,7 @@ def add_item(request, pk):
             try:
                 order_item = OrderItem.objects.get(id=item_id)
             except OrderItem.DoesNotExist:
-                order_item = OrderItem(order=order)
+                order_item = OrderItem(order=order, quantity=1)
             if order_item.delivered:
                 if order.complete:
                     return redirect('create_order', pk=pk)
@@ -318,7 +324,11 @@ def add_item(request, pk):
                         order_item.product = product
                         order_item.price = product.price
                         order_item.category = product.category
-                        product.quantity -= order_item.quantity
+                        if not package:
+                            order_item.quantity = product.quantity
+                            product.quantity = 0
+                        else:
+                            product.quantity -= order_item.quantity
                         if product.quantity == 0:
                             product.available = False
                     product.save()
@@ -397,30 +407,3 @@ def update_item(request):
             }
             return JsonResponse(response, safe=False)
     return JsonResponse("no action", safe=False)
-
-
-# if order_item.product:
-#                 if not order_item.product.id == product.id
-#                     product1 = Product.objects.get(
-#                         id=order_item.product.id)
-#                     product1.quantity += order_item.quantity
-#                     product1.available = True
-#                     product1.save()
-#                     order_item.price = product.price
-#                     order_item.category = product.category
-#                     if not product.quantity == 0:
-#                         product.quantity -= order_item.quantity
-#                     if product.quantity == 0:
-#                         product.available = False
-#                     product.save()
-#                     order_item.product = product
-#             else:
-#             if product:
-#                 order_item.price = product.price
-#                 order_item.category = product.category
-#                 if not product.quantity == 0:
-#                     product.quantity -= order_item.quantity
-#                 if product.quantity == 0:
-#                     product.available = False
-#                 product.save()
-#                 order_item.product = product

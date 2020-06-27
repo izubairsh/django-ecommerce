@@ -7,7 +7,9 @@ from packages.models import Package
 from orders.models import Order
 from customers.models import Customer
 from products.models import Product
+from expenses.models import Expense
 from datetime import datetime
+from django.core.paginator import Paginator
 
 
 def login(request):
@@ -41,18 +43,29 @@ def logout(request):
 @login_required(login_url='login')
 def dashboard(request):
     today = datetime.today()
+
+    expenses = Expense.objects.all().filter(year=today.year)
+    paginator = Paginator(expenses, 1)
+    page = request.GET.get('page')
+    paged_expenses = paginator.get_page(page)
+    expense = sum([e.amount for e in expenses])
+
     orders = Order.objects.all()
-    customers = Customer.objects.all().count()
-    products = Product.objects.all().filter(available=True).count()
-    new_order = 0
-    total = 0
-    cost = 0
+    customers_count = Customer.objects.all().count()
+    products_count = Product.objects.all().filter(available=True).count()
+    products = Product.objects.all()
+
+    cost = cost1 = total = new_order = 0
     for o in orders:
         if today.month == o.date_created.month:
-            total += o.get_cart_total
-            cost += o.get_cost
+            cost1 += o.get_cost
+            total += o.get_total_paid
         if not o.get_status:
             new_order += 1
+
+    for product in products:
+        if today.month == product.date_created.month:
+            cost += product.cost
     items = OrderItem.objects.all().filter(product=None)
     packages = Package.objects.all()
     arr = []
@@ -63,18 +76,18 @@ def dashboard(request):
             'count': temp.count()
         }
         arr.append(c)
-    print(arr)
     context = {
         'new_orders': new_order,
-        'customers': customers,
+        'customers': customers_count,
         'orders': orders.count(),
-        'products': products,
+        'products': products_count,
         'revenue': total,
         'cost': cost,
-        'profit': total-cost,
-        'expense': 500,
+        'profit': total-cost1,
         'arr': arr,
         'year': today.year,
-        'month': today.strftime("%B")
+        'month': today.strftime("%B"),
+        'expenses': paged_expenses,
+        'expense': expense
     }
     return render(request, 'dashboard.html', context)

@@ -26,3 +26,6 @@ class Job(models.Model):
         total3 = self.day3_rate * self.day3_count
         total = total1+total2+total3
         return total
+
+    class Meta:
+        ordering = ['-id']

@@ -22,6 +22,12 @@ class Order(models.Model):
         return total
 
     @property
+    def get_sub_total(self):
+        order_items = self.orderitem_set.all()
+        total = sum([item.price for item in order_items])
+        return total
+
+    @property
     def get_cost(self):
         order_items = self.orderitem_set.all().filter(complete=True)
         total = sum([item.product.cost for item in order_items])
@@ -67,6 +73,9 @@ class Order(models.Model):
             if not item.delivered:
                 return False
         return True
+
+    class Meta:
+        ordering = ['-id']
 
 
 class Transaction(models.Model):

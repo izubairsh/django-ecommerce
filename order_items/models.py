@@ -54,3 +54,6 @@ class OrderItem(models.Model):
     def get_total(self):
         total = self.price * self.quantity
         return total-self.discount
+
+    class Meta:
+        ordering = ['-id']
