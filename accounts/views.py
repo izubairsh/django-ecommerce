@@ -50,24 +50,27 @@ def dashboard(request):
     paged_expenses = paginator.get_page(page)
     expense = sum([e.amount for e in expenses])
 
-    orders = Order.objects.all()
+    orders = Order.objects.all().filter(complete=True)
     customers_count = Customer.objects.all().count()
     products_count = Product.objects.all().filter(available=True).count()
     products = Product.objects.all()
 
     cost = cost1 = total = new_order = 0
     for o in orders:
-        if o.date_created:
-            if today.month == o.date_created.month:
-                cost1 += o.get_cost
-                total += o.get_total_paid
+        cost1 += o.get_cost
+        total += o.get_total_paid
+        # if o.date_created:
+        #     if today.month == o.date_created.month:
+        #         cost1 += o.get_cost
+        #         total += o.get_total_paid
         if not o.get_status:
             new_order += 1
 
     for product in products:
-        if product.date_created:
-            if today.month == product.date_created.month:
-                cost += product.cost
+        cost += product.cost
+        # if product.date_created:
+        #     if today.month == product.date_created.month:
+        #         cost += product.cost
     items = OrderItem.objects.all().filter(product=None)
     packages = Package.objects.all()
     arr = []

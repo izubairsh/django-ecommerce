@@ -47,7 +47,7 @@ def orders(request):
             else:
                 a = False
             orders = [x for x in orders if x.get_status == a]
-    paginator = Paginator(orders, 10)
+    paginator = Paginator(orders, 20)
     page = request.GET.get('page')
     paged_orders = paginator.get_page(page)
     context = {
@@ -103,7 +103,7 @@ def order_form(request, pk=0):
             Q(price__icontains=q)
         ).distinct()
 
-    paginator = Paginator(products, 5)
+    paginator = Paginator(products, 10)
     page = request.GET.get('page')
     paged_products = paginator.get_page(page)
 
@@ -218,19 +218,19 @@ def cart(request):
 
 
 def refund_order(request, pk):
-    order = Order.objects.get(id=pk)
-    items = order.orderitem_set.all()
+    # order = Order.objects.get(id=pk)
+    # items = order.orderitem_set.all()
 
-    for i in items:
-        if not i.delivered:
-            product = Product.objects.get(id=i.product.id)
-            print(product)
-            product.quantity += i.quantity
-            product.available = True
-            product.save()
+    # for i in items:
+    #     if not i.delivered:
+    #         product = Product.objects.get(id=i.product.id)
+    #         print(product)
+    #         product.quantity += i.quantity
+    #         product.available = True
+    #         product.save()
 
-    order.refund = True
-    order.save()
+    # order.refund = True
+    # order.save()
 
     return redirect('orders')
 

@@ -22,7 +22,7 @@ def index(request):
             Q(price__icontains=q)
         ).distinct()
 
-    paginator = Paginator(products, 10)
+    paginator = Paginator(products, 20)
     page = request.GET.get('page')
     paged_products = paginator.get_page(page)
     context = {

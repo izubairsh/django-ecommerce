@@ -50,6 +50,8 @@
                                         </div>
                                     </form>
                                     <div class="card-tools ml-auto mr-0 ">
+                                        <button id="print_btn" class="btn btn-default"><i class="fa fa-print"></i>
+                                            Print</button>
                                         <a class="btn btn-success" href="{% url 'create_product' %}">
                                             Add New
                                             <i class="fas fa-user-plus fa-fw"></i>
@@ -158,6 +160,12 @@
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+<script type="text/javascript">
 
+    var printBtn = document.getElementById("print_btn")
+    printBtn.addEventListener("click", () => {
+        window.print()
+    });
+</script>
 
 {% endblock %}

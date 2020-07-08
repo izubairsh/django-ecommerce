@@ -56,6 +56,8 @@
                                         </div>
                                     </div>
                                     <div class="card-tools ml-auto mr-0 ">
+                                        <button id="print_btn" class="btn btn-default"><i class="fa fa-print"></i>
+                                            Print</button>
                                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                             <label class="btn bg-olive active">
                                                 <input type="radio" name="status" id="complete" autocomplete="off"
@@ -181,6 +183,12 @@
 <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+<script type="text/javascript">
 
+    var printBtn = document.getElementById("print_btn")
+    printBtn.addEventListener("click", () => {
+        window.print()
+    });
+</script>
 
 {% endblock %}
