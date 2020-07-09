@@ -45,7 +45,7 @@ def dashboard(request):
     today = datetime.today()
 
     expenses = Expense.objects.all().filter(year=today.year)
-    paginator = Paginator(expenses, 1)
+    paginator = Paginator(expenses, 5)
     page = request.GET.get('page')
     paged_expenses = paginator.get_page(page)
     expense = sum([e.amount for e in expenses])
