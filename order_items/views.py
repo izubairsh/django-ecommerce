@@ -51,7 +51,7 @@ def index(request):
         if not q == '':
             items = items.filter(order=q).distinct()
 
-    paginator = Paginator(items, 20)
+    paginator = Paginator(items, 15)
     page = request.GET.get('page')
     paged_items = paginator.get_page(page)
     context = {

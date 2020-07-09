@@ -47,7 +47,7 @@ def orders(request):
             else:
                 a = False
             orders = [x for x in orders if x.get_status == a]
-    paginator = Paginator(orders, 20)
+    paginator = Paginator(orders, 15)
     page = request.GET.get('page')
     paged_orders = paginator.get_page(page)
     context = {
