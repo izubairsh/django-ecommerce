@@ -4,6 +4,7 @@ from customers.models import Customer
 
 
 class Order(models.Model):
+    name = models.CharField(max_length=200, null=True)
     user = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, blank=False)
     customer = models.ForeignKey(

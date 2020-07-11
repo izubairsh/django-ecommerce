@@ -149,6 +149,8 @@ def checkout(request):
             order, created = Order.objects.get_or_create(
                 user=user, complete=False)
             order.customer = customer
+            a_name = request.POST['a_name']
+            order.name = a_name
             order.save()
             return redirect('invoice')
     else:

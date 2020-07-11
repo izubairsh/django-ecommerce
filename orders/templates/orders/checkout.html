@@ -31,7 +31,10 @@
                             <!--Card content-->
                             <form id="form" class="card-body" method="POST">
                                 {% csrf_token %}
-
+                                <div class="form-group">
+                                    <label for="a_name">Alternate Name</label>
+                                    <input type="text" class="form-control" id="a_name" name="a_name">
+                                </div>
                                 {{form|crispy}}
                                 <hr class="mb-4">
                                 <button type="submit" id="form-button"
