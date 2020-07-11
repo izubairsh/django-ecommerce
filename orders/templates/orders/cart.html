@@ -107,7 +107,7 @@
                                                 <ul class="pagination">
                                                     {% if products.has_previous %}
                                                     <li class="page-item">
-                                                        <a href="?page={{products.previous_page_number}}"
+                                                        <a href="?page={{products.previous_page_number}}&q={{query}}&type={{type}}"
                                                             class="page-link">&laquo;</a>
                                                     </li>
                                                     {% else %}
@@ -122,13 +122,14 @@
                                                     </li>
                                                     {% else %}
                                                     <li class="page-item">
-                                                        <a href="?page={{i}}" class="page-link">{{i}}</a>
+                                                        <a href="?page={{i}}&q={{query}}&type={{type}}"
+                                                            class="page-link">{{i}}</a>
                                                     </li>
                                                     {% endif %}
                                                     {% endfor %}
                                                     {% if products.has_next %}
                                                     <li class="page-item">
-                                                        <a href="?page={{products.next_page_number}}"
+                                                        <a href="?page={{products.next_page_number}}&q={{query}}&type={{type}}"
                                                             class="page-link">&raquo;</a>
                                                     </li>
                                                     {% else %}

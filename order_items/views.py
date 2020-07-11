@@ -18,6 +18,7 @@ def index(request):
             status = request.POST['status']
             if status == 'complete':
                 item.delivered = True
+                item.complete = False
             item.save()
     q = ''
     day = '1'
