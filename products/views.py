@@ -30,7 +30,7 @@ def index(request):
     products = products.filter(
         Q(date_created__icontains=sellectedYear)
     ).distinct()
-    paginator = Paginator(products, 1)
+    paginator = Paginator(products, 15)
     page = request.GET.get('page')
     paged_products = paginator.get_page(page)
     context = {
