@@ -54,7 +54,6 @@ def index(request):
             "count": count
         })
     items = items.exclude(package=None)
-    items_count = items.count()
     items = items.filter(day=day)
     if 'q' in request.GET:
         q = request.GET['q']
@@ -68,6 +67,7 @@ def index(request):
         Q(date_added__icontains=sellectedYear)
     ).distinct()
 
+    items_count = items.count()
     paginator = Paginator(items, 15)
     page = request.GET.get('page')
     paged_items = paginator.get_page(page)
