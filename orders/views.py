@@ -66,6 +66,12 @@ def orders(request):
                     if order.get_balance > 0:
                         bal_orders.append(order)
                 orders = bal_orders
+            elif:
+                bal_orders = []
+                for order in orders:
+                    if order.get_balance == 0:
+                        bal_orders.append(order)
+                orders = bal_orders
     paginator = Paginator(orders, 15)
     page = request.GET.get('page')
     paged_orders = paginator.get_page(page)
