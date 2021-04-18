@@ -20,7 +20,9 @@ def index(request):
 
     if 'type' in request.GET:
         t = Category.objects.get(name=request.GET['type'])
+    Product.objects.update(token=None)
     products = Product.objects.order_by('-date_created').filter(category=t)
+    
     if 'q' in request.GET:
         q = request.GET['q']
         products = products.filter(
