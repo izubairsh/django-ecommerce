@@ -82,13 +82,20 @@ def dashboard(request):
 
     categories = Category.objects.all()
     total_stock = []
+    total_booking_without_pack = []
     for cat in categories:
+        temp1 = items.filter(category=cat).filter(package=None)
         temp = products.filter(category=cat)
         c = {
             'category': cat,
             'count': temp.count()
         }
+        b = {
+            'category': cat,
+            'count': temp1.count()
+        }
         total_stock.append(c)
+        total_booking_without_pack.append(b)
     context = {
         'new_orders': orders.count(),
         'customers': customers_count,
@@ -102,6 +109,7 @@ def dashboard(request):
         'total_stock': total_stock,
         'expenses': paged_expenses,
         'expense': expense,
-        'sellectedYear': sellectedYear
+        'sellectedYear': sellectedYear,
+        'total_booking_without_pack': total_booking_without_pack
     }
     return render(request, 'dashboard.html', context)

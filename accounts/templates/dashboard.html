@@ -182,6 +182,43 @@
                         <!-- /.card-footer -->
                     </div>
                     <!-- /.card -->
+                    <!-- PRODUCT LIST -->
+                    <div class="card">
+                        <div class="card-header border-transparent">
+                            <h3 class="card-title">Total Products</h3>
+
+                            <div class="card-tools">
+
+                            </div>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table m-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Qty</th>
+                                            <th>Category</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {%for i in total_booking_without_pack%}
+                                        <tr>
+                                            <td>{{i.count}}</td>
+                                            <td>{{i.category.name}}</td>
+                                        </tr>
+                                        {%endfor%}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.table-responsive -->
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer clearfix">
+                        </div>
+                        <!-- /.card-footer -->
+                    </div>
+                    <!-- /.card -->
                 </div>
                 <!-- /.col -->
 

@@ -25,7 +25,7 @@ class Time(models.Model):
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.PROTECT)
     product = models.ForeignKey(
-        Product, on_delete=models.PROTECT, null=True, blank=True)
+        Product, on_delete=models.SET_NULL, null=True, blank=True)
     package = models.ForeignKey(
         Package, on_delete=models.PROTECT, null=True, blank=True)
     quantity = models.IntegerField(default=1,)
