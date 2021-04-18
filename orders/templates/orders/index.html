@@ -27,6 +27,10 @@
                                 <div class="row col-sm-12 no-print">
                                     <form class="form-inline col-sm-6 col-md-4" style="" method="GET">
                                         <div class="input-group input-group-sm col-sm-12">
+                                            <input data-action="search" name="sellectedYear" id="id_q"
+                                                class="form-control form-control-navbar search" type="search"
+                                                placeholder="Search" aria-label="Search" value="{{sellectedYear}}"
+                                                hidden>
                                             <input data-action="search" name="q" id="id_q"
                                                 class="form-control form-control-navbar search" type="search"
                                                 placeholder="Search" aria-label="Search" value="{{query}}">
@@ -68,6 +72,14 @@
                                             <th>Delivered
                                                 <br>
                                                 <form method="GET">
+                                                    <input data-action="search" name="sellectedYear" id="id_q"
+                                                        class="form-control form-control-navbar search" type="search"
+                                                        placeholder="Search" aria-label="Search"
+                                                        value="{{sellectedYear}}" hidden>
+                                                    <input data-action="search" name="q" id="id_q"
+                                                        class="form-control form-control-navbar search" type="search"
+                                                        placeholder="Search" aria-label="Search" value="{{query}}"
+                                                        hidden>
                                                     <select name="d" onchange="this.form.submit()">
                                                         <option value="" selected="selected"></option>
                                                         <option value=True {% if "True" in d%}selected="selected"
@@ -141,7 +153,7 @@
                                         <ul class="pagination">
                                             {% if orders.has_previous %}
                                             <li class="page-item">
-                                                <a href="?page={{orders.previous_page_number}}"
+                                                <a href="?page={{orders.previous_page_number}}&sellectedYear={{sellectedYear}}"
                                                     class="page-link">&laquo;</a>
                                             </li>
                                             {% else %}
@@ -156,13 +168,14 @@
                                             </li>
                                             {% else %}
                                             <li class="page-item">
-                                                <a href="?page={{i}}" class="page-link">{{i}}</a>
+                                                <a href="?page={{i}}&sellectedYear={{sellectedYear}}"
+                                                    class="page-link">{{i}}</a>
                                             </li>
                                             {% endif %}
                                             {% endfor %}
                                             {% if orders.has_next %}
                                             <li class="page-item">
-                                                <a href="?page={{orders.next_page_number}}"
+                                                <a href="?page={{orders.next_page_number}}&sellectedYear={{sellectedYear}}"
                                                     class="page-link">&raquo;</a>
                                             </li>
                                             {% else %}
@@ -188,7 +201,6 @@
 <!-- /.content-wrapper -->
 
 <script type="text/javascript">
-
     var printBtn = document.getElementById("print_btn")
     printBtn.addEventListener("click", () => {
         window.print()

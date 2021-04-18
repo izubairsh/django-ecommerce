@@ -5,9 +5,18 @@ from .models import OrderItem
 import datetime
 from packages.models import Package
 import array as arr
+from datetime import datetime
+from django.db.models import Q
+
 # Create your views here.
 @login_required(login_url='login')
 def index(request):
+
+    today = datetime.today()
+    sellectedYear = today.year
+    if 'sellectedYear' in request.GET:
+        sellectedYear = request.GET['sellectedYear']
+
     if request.POST:
         item_id = request.POST['id']
         try:
@@ -30,7 +39,7 @@ def index(request):
         status = request.GET['status']
     if status == 'complete':
         items = OrderItem.objects.order_by(
-            'time').filter(complete=True, day=day)
+            'time').filter(delivered=False, day=day)
     elif status == 'delivered':
         items = OrderItem.objects.order_by(
             'time').filter(delivered=True, day=day)
@@ -50,7 +59,14 @@ def index(request):
     if 'q' in request.GET:
         q = request.GET['q']
         if not q == '':
-            items = items.filter(order=q).distinct()
+            items = items.filter(
+                Q(product__token__icontains=q) |
+                Q(order__id__icontains=q)
+            ).distinct()
+
+    items = items.filter(
+        Q(date_added__icontains=sellectedYear)
+    ).distinct()
 
     paginator = Paginator(items, 15)
     page = request.GET.get('page')
@@ -61,6 +77,7 @@ def index(request):
         'day': day,
         'status': status,
         'packages': total,
-        'items_count': items_count
+        'items_count': items_count,
+        'sellectedYear': sellectedYear
     }
     return render(request, 'order_items/index.html', context)

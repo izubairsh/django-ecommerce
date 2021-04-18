@@ -27,7 +27,14 @@ from django.core import serializers
 def orders(request):
     q = d = r = ''
 
+    today = datetime.today()
+    sellectedYear = today.year
+    if 'sellectedYear' in request.GET:
+        sellectedYear = request.GET['sellectedYear']
     orders = Order.objects.order_by('-date_created').filter(complete=True)
+    orders = orders.filter(
+        Q(date_created__icontains=sellectedYear)
+    ).distinct()
     if 'q' in request.GET:
         q = request.GET['q']
         orders = orders.filter(
@@ -42,11 +49,12 @@ def orders(request):
     if 'd' in request.GET:
         d = request.GET['d']
         if not d == "":
-            if 'True' in d:
-                a = True
-            else:
-                a = False
-            orders = [x for x in orders if x.get_status == a]
+            delivered = 'True' in d
+            delivered_orders = []
+            for order in orders:
+                if order.get_status == delivered:
+                    delivered_orders.append(order)
+            orders = delivered_orders
     paginator = Paginator(orders, 15)
     page = request.GET.get('page')
     paged_orders = paginator.get_page(page)
@@ -54,7 +62,8 @@ def orders(request):
         'orders': paged_orders,
         'query': q,
         'r': r,
-        'd': d
+        'd': d,
+        'sellectedYear': sellectedYear
     }
     return render(request, 'orders/index.html', context)
 
@@ -96,6 +105,10 @@ def order_form(request, pk=0):
     products = Product.objects.order_by(
         '-date_created').filter(category=t, available=True)
 
+    today = datetime.today()
+    products = products.filter(
+        Q(date_created__icontains=today.year)
+    ).distinct()
     if 'q' in request.GET:
         q = request.GET['q']
         products = products.filter(

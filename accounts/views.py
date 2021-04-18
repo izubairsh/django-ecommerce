@@ -6,10 +6,11 @@ from order_items.models import OrderItem
 from packages.models import Package
 from orders.models import Order
 from customers.models import Customer
-from products.models import Product
+from products.models import Product, Category
 from expenses.models import Expense
 from datetime import datetime
 from django.core.paginator import Paginator
+from django.db.models import Q
 
 
 def login(request):
@@ -43,56 +44,64 @@ def logout(request):
 @login_required(login_url='login')
 def dashboard(request):
     today = datetime.today()
-
-    expenses = Expense.objects.all().filter(year=today.year)
-    paginator = Paginator(expenses, 5)
+    sellectedYear = today.year
+    if 'sellectedYear' in request.GET:
+        sellectedYear = request.GET['sellectedYear']
+    expenses = Expense.objects.all().filter(year=sellectedYear)
+    paginator = Paginator(expenses, 1)
     page = request.GET.get('page')
     paged_expenses = paginator.get_page(page)
     expense = sum([e.amount for e in expenses])
 
     orders = Order.objects.all().filter(complete=True)
     customers_count = Customer.objects.all().count()
-    products_count = Product.objects.all().filter(available=True).count()
-    products = Product.objects.all()
-
-    cost = cost1 = total = new_order = 0
-    for o in orders:
-        cost1 += o.get_cost
-        total += o.get_total_paid
-        # if o.date_created:
-        #     if today.month == o.date_created.month:
-        #         cost1 += o.get_cost
-        #         total += o.get_total_paid
-        if not o.get_status:
-            new_order += 1
-
-    for product in products:
-        cost += product.cost
-        # if product.date_created:
-        #     if today.month == product.date_created.month:
-        #         cost += product.cost
-    items = OrderItem.objects.all().filter(product=None)
+    items = OrderItem.objects.all()
     packages = Package.objects.all()
-    arr = []
-    for p in packages:
-        temp = items.filter(package=p)
+    products = Product.objects.all()
+    products = products.filter(
+        Q(date_created__icontains=sellectedYear)
+    ).distinct()
+    orders = orders.filter(
+        Q(date_created__icontains=sellectedYear)
+    ).distinct()
+    items = items.filter(
+        Q(date_added__icontains=sellectedYear)
+    ).distinct()
+    total_cost = sum([order.get_cost for order in orders])
+    total_revenue = sum([order.get_sub_total for order in orders])
+    total_balance = sum([order.get_balance for order in orders])
+    product_cost = sum([product.cost for product in products])
+
+    total_booking = []
+    for package in packages:
         c = {
-            'package': p,
+            'package': package,
+            'count': items.filter(package=package).count()
+        }
+        total_booking.append(c)
+
+    categories = Category.objects.all()
+    total_stock = []
+    for cat in categories:
+        temp = products.filter(category=cat)
+        c = {
+            'category': cat,
             'count': temp.count()
         }
-        arr.append(c)
+        total_stock.append(c)
     context = {
-        'new_orders': new_order,
+        'new_orders': orders.count(),
         'customers': customers_count,
         'orders': orders.count(),
-        'products': products_count,
-        'revenue': total,
-        'cost': cost,
-        'profit': total-cost1,
-        'arr': arr,
-        'year': today.year,
-        'month': today.strftime("%B"),
+        'products': products.count(),
+        'revenue': total_revenue,
+        'balance': total_balance,
+        'product_cost': product_cost,
+        'profit': total_revenue-total_cost,
+        'total_booking': total_booking,
+        'total_stock': total_stock,
         'expenses': paged_expenses,
-        'expense': expense
+        'expense': expense,
+        'sellectedYear': sellectedYear
     }
     return render(request, 'dashboard.html', context)

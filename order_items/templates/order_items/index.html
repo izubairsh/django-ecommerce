@@ -31,7 +31,10 @@
                                 <form class="row" style="" method="GET">
                                     <div class="col-md-6">
                                         <div class="row">
-
+                                            <input data-action="search" name="sellectedYear" id="id_q"
+                                                class="form-control form-control-navbar search" type="search"
+                                                placeholder="Search" aria-label="Search" value="{{sellectedYear}}"
+                                                hidden>
                                             <div class="input-group input-group-sm mr-1 col-6">
                                                 <input data-action="search" name="q" id="id_q"
                                                     class="form-control form-control-navbar search" type="search"
@@ -100,7 +103,11 @@
                                     {% for item in items%}
                                     <tr>
                                         <td><a href="{% url 'order' item.order.id%}">{{item.order}}</a></td>
+                                        {% if item.product %}
                                         <td><a href="{% url 'product' item.product.id%}">{{item.product.token}}</a></td>
+                                        {%else%}
+                                        <td>-</td>
+                                        {%endif%}
                                         <td>{{item.category.name}}</td>
                                         {% if item.package %}
                                         <td>{{item.package}}</td>
@@ -141,7 +148,7 @@
                                     <ul class="pagination">
                                         {% if items.has_previous %}
                                         <li class="page-item">
-                                            <a href="?page={{items.previous_page_number}}&q={{query}}&day={{day}}&status={{status}}"
+                                            <a href="?page={{items.previous_page_number}}&q={{query}}&day={{day}}&status={{status}}&sellectedYear={{sellectedYear}}"
                                                 class="page-link">&laquo;</a>
                                         </li>
                                         {% else %}
@@ -156,14 +163,14 @@
                                         </li>
                                         {% else %}
                                         <li class="page-item">
-                                            <a href="?page={{i}}&q={{query}}&day={{day}}&status={{status}}"
+                                            <a href="?page={{i}}&q={{query}}&day={{day}}&status={{status}}&sellectedYear={{sellectedYear}}"
                                                 class="page-link">{{i}}</a>
                                         </li>
                                         {% endif %}
                                         {% endfor %}
                                         {% if items.has_next %}
                                         <li class="page-item">
-                                            <a href="?page={{items.next_page_number}}&q={{query}}&day={{day}}&status={{status}}"
+                                            <a href="?page={{items.next_page_number}}&q={{query}}&day={{day}}&status={{status}}&sellectedYear={{sellectedYear}}"
                                                 class="page-link">&raquo;</a>
                                         </li>
                                         {% else %}
@@ -188,7 +195,6 @@
 </div>
 <!-- /.content-wrapper -->
 <script type="text/javascript">
-
     var printBtn = document.getElementById("print_btn")
     printBtn.addEventListener("click", () => {
         window.print()

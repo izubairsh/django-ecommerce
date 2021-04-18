@@ -4,6 +4,7 @@ from .models import Product, Category
 from django.contrib.auth.decorators import login_required
 from products.forms import ProductForm
 from django.db.models import Q
+from datetime import datetime
 
 
 @login_required(login_url='login')
@@ -11,6 +12,11 @@ def index(request):
     q = ''
     categories = Category.objects.all()
     t = categories.first()
+
+    today = datetime.today()
+    sellectedYear = today.year
+    if 'sellectedYear' in request.GET:
+        sellectedYear = request.GET['sellectedYear']
 
     if 'type' in request.GET:
         t = Category.objects.get(name=request.GET['type'])
@@ -21,15 +27,18 @@ def index(request):
             Q(token__icontains=q) |
             Q(price__icontains=q)
         ).distinct()
-
-    paginator = Paginator(products, 15)
+    products = products.filter(
+        Q(date_created__icontains=sellectedYear)
+    ).distinct()
+    paginator = Paginator(products, 1)
     page = request.GET.get('page')
     paged_products = paginator.get_page(page)
     context = {
         'products': paged_products,
         'query': q,
         'type': t.name,
-        'categories': categories
+        'categories': categories,
+        'sellectedYear': sellectedYear
     }
     return render(request, 'products/index.html', context)
 

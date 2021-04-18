@@ -25,7 +25,7 @@
                         <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
 
                         <div class="info-box-content">
-                            <span class="info-box-text">New Orders</span>
+                            <span class="info-box-text">Orders</span>
                             <span class="info-box-number">
                                 {{new_orders}}
                             </span>
@@ -49,7 +49,6 @@
                 </div>
                 <!-- /.col -->
 
-                <!-- fix for small devices only -->
                 <div class="clearfix hidden-md-up"></div>
 
                 <div class="col-12 col-sm-6 col-md-3">
@@ -78,39 +77,23 @@
                     <!-- /.info-box -->
                 </div>
                 <!-- /.col -->
+
+
             </div>
             <!-- /.row -->
 
+            <!-- / yearly recap -->
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="card-title">Monthly Recap Report</h5>
+                            <h5 class="card-title">Yearly Recap Report</h5>
 
                             <div class="card-tools">
-                                <div class="input-group">
-                                    <button type="button" class="btn btn-default float-right" id="daterange-btn">
-                                        <i class="far fa-calendar-alt"></i> Date range picker
-                                        <i class="fas fa-caret-down"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <p class="text-center">
-                                        <strong>Sales: {{year}}</strong>
-                                    </p>
-
-
-                                </div>
-                                <!-- /.col -->
 
                             </div>
-                            <!-- /.row -->
                         </div>
+
                         <!-- ./card-body -->
                         <div class="card-footer">
                             <div class="row">
@@ -118,7 +101,7 @@
                                 <!-- /.col -->
                                 <div class="col-sm-3 col-6">
                                     <div class="description-block border-right">
-                                        <h5 class="description-header">PKR {{cost}}</h5>
+                                        <h5 class="description-header">PKR {{product_cost}}</h5>
                                         <span class="description-text">TOTAL COST</span>
                                     </div>
                                     <!-- /.description-block -->
@@ -138,14 +121,15 @@
                                     </div>
                                     <!-- /.description-block -->
                                 </div>
-                                <!-- /.col -->
                                 <div class="col-sm-3 col-6">
-                                    <div class="description-block">
-                                        <h5 class="description-header">PKR {{expense}}</h5>
-                                        <span class="description-text">Total Expense</span>
+                                    <div class="description-block border-right">
+                                        <h5 class="description-header">PKR {{balance}}</h5>
+                                        <span class="description-text">TOTAL Balance</span>
                                     </div>
                                     <!-- /.description-block -->
                                 </div>
+                                <!-- /.col -->
+
                             </div>
                             <!-- /.row -->
                         </div>
@@ -155,15 +139,102 @@
                 </div>
                 <!-- /.col -->
             </div>
-            <!-- /.row -->
 
             <!-- Main row -->
             <div class="row">
-                <!-- Left col -->
-                <div class="col-md-8">
+
+
+                <div class="col-md-6">
+                    <!-- PRODUCT LIST -->
                     <div class="card">
                         <div class="card-header border-transparent">
-                            <h3 class="card-title">Expenses</h3>
+                            <h3 class="card-title">Total Products</h3>
+
+                            <div class="card-tools">
+
+                            </div>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table m-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Qty</th>
+                                            <th>Category</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {%for i in total_stock%}
+                                        <tr>
+                                            <td>{{i.count}}</td>
+                                            <td>{{i.category.name}}</td>
+                                        </tr>
+                                        {%endfor%}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.table-responsive -->
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer clearfix">
+                        </div>
+                        <!-- /.card-footer -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+
+                <div class="col-md-6">
+                    <!-- PRODUCT LIST -->
+                    <div class="card">
+                        <div class="card-header border-transparent">
+                            <h3 class="card-title">Total booking</h3>
+
+                            <div class="card-tools">
+
+                            </div>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table m-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Qty</th>
+                                            <th>Package Name</th>
+                                            <th>Category</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {%for i in total_booking%}
+                                        <tr>
+                                            <td>{{i.count}}</td>
+                                            <td>{{i.package.name}}</td>
+                                            <td>{{i.package.category}}</td>
+                                        </tr>
+                                        {%endfor%}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.table-responsive -->
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer clearfix">
+                        </div>
+                        <!-- /.card-footer -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <!-- Left col -->
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header border-transparent">
+                            <h3 class="card-title">Expenses (PKR {{expense}})</h3>
 
                             <div class="card-tools">
                                 <a class="btn btn-success" href="{% url 'create_expense' %}">
@@ -215,7 +286,7 @@
                                     <ul class="pagination">
                                         {% if expenses.has_previous %}
                                         <li class="page-item">
-                                            <a href="?page={{expenses.previous_page_number}}"
+                                            <a href="?page={{expenses.previous_page_number}}&sellectedYear={{sellectedYear}}"
                                                 class="page-link">&laquo;</a>
                                         </li>
                                         {% else %}
@@ -230,13 +301,15 @@
                                         </li>
                                         {% else %}
                                         <li class="page-item">
-                                            <a href="?page={{i}}" class="page-link">{{i}}</a>
+                                            <a href="?page={{i}}&sellectedYear={{sellectedYear}}"
+                                                class="page-link">{{i}}</a>
                                         </li>
                                         {% endif %}
                                         {% endfor %}
                                         {% if expenses.has_next %}
                                         <li class="page-item">
-                                            <a href="?page={{expenses.next_page_number}}" class="page-link">&raquo;</a>
+                                            <a href="?page={{expenses.next_page_number}}&sellectedYear={{sellectedYear}}"
+                                                class="page-link">&raquo;</a>
                                         </li>
                                         {% else %}
                                         <li class="page-item disabled">
@@ -253,51 +326,7 @@
 
                 </div>
                 <!-- /.col -->
-
-                <div class="col-md-4">
-                    <!-- PRODUCT LIST -->
-                    <div class="card">
-                        <div class="card-header border-transparent">
-                            <h3 class="card-title">Required Products</h3>
-
-                            <div class="card-tools">
-
-                            </div>
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body p-0">
-                            <div class="table-responsive">
-                                <table class="table m-0">
-                                    <thead>
-                                        <tr>
-                                            <th>Qty</th>
-                                            <th>Name</th>
-                                            <th>Category</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {%for i in arr%}
-                                        <tr>
-                                            <td>{{i.count}}</td>
-                                            <td>{{i.package.name}}</td>
-                                            <td>{{i.package.category}}</td>
-                                        </tr>
-                                        {%endfor%}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- /.table-responsive -->
-                        </div>
-                        <!-- /.card-body -->
-                        <div class="card-footer clearfix">
-                        </div>
-                        <!-- /.card-footer -->
-                    </div>
-                    <!-- /.card -->
-                </div>
-                <!-- /.col -->
             </div>
-            <!-- /.row -->
         </div>
     </div>
     <!-- /.content -->
