@@ -60,7 +60,7 @@ def orders(request):
         b = request.GET['b']
         if not b == "":
             bal = 'True' in b
-            if b:
+            if bal:
                 bal_orders = []
                 for order in orders:
                     if order.get_balance > 0:
