@@ -25,7 +25,7 @@ from django.core import serializers
 
 @login_required(login_url='login')
 def orders(request):
-    q = d = r = ''
+    q = d = r = b = ''
 
     today = datetime.today()
     sellectedYear = today.year
