@@ -66,7 +66,7 @@ def orders(request):
                     if order.get_balance > 0:
                         bal_orders.append(order)
                 orders = bal_orders
-            elif:
+            else:
                 bal_orders = []
                 for order in orders:
                     if order.get_balance == 0:
