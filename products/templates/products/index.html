@@ -51,31 +51,36 @@
                                                 </select>
                                             </div>
                                         </div>
-                                    </form>
-                                    <div class="card-tools ml-auto mr-0 ">
+                                        <div class="card-tools ml-auto mr-0 ">
 
-                                        <button id="" class="btn btn-default">Clear Token</button>
-                                        <button id="print_btn" class="btn btn-default"><i class="fa fa-print"></i>
-                                            Print</button>
-                                        <a class="btn btn-success" href="{% url 'create_product' %}">
-                                            Add New
-                                            <i class="fas fa-user-plus fa-fw"></i>
-                                        </a>
-                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                             <label class="btn bg-olive active">
-                                                <input type="radio" name="status" id="inStock" autocomplete="off"
-                                                    {% if 'inStock' in status%} checked="true" {%endif%} value="inStock"
-                                                    onclick="this.form.submit()">
-                                                In Stock
+                                                <input type="radio" name="tokenClear" id="tokenClear" autocomplete="off"
+                                                    value="tokenClear" onclick="this.form.submit()">
+                                                Clear Token
                                             </label>
-                                            <label class="btn bg-olive">
-                                                <input type="radio" name="status" id="expense" autocomplete="off"
-                                                    {% if 'expense' in status%} checked="true" {%endif%} value="expense"
-                                                    onclick="this.form.submit()">
-                                                Expense
-                                            </label>
+                                            <button id="print_btn" class="btn btn-default"><i class="fa fa-print"></i>
+                                                Print</button>
+                                            <a class="btn btn-success" href="{% url 'create_product' %}">
+                                                Add New
+                                                <i class="fas fa-user-plus fa-fw"></i>
+                                            </a>
+                                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                <label class="btn bg-olive active">
+                                                    <input type="radio" name="status" id="inStock" autocomplete="off"
+                                                        {% if 'inStock' in status%} checked="true" {%endif%}
+                                                        value="inStock" onclick="this.form.submit()">
+                                                    In Stock
+                                                </label>
+                                                <label class="btn bg-olive">
+                                                    <input type="radio" name="status" id="expense" autocomplete="off"
+                                                        {% if 'expense' in status%} checked="true" {%endif%}
+                                                        value="expense" onclick="this.form.submit()">
+                                                    Expense
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
+
+                                    </form>
                                 </div>
 
                             </div>
