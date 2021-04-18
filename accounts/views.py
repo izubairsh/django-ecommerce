@@ -84,7 +84,7 @@ def dashboard(request):
     total_stock = []
     total_booking_without_pack = []
     for cat in categories:
-        temp1 = items.filter(category=cat).filter(package=None)
+        temp1 = items.filter(category=cat).filter(package!=None)
         temp = products.filter(category=cat)
         c = {
             'category': cat,
