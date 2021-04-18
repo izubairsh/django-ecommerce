@@ -61,6 +61,20 @@
                                             Add New
                                             <i class="fas fa-user-plus fa-fw"></i>
                                         </a>
+                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                            <label class="btn bg-olive active">
+                                                <input type="radio" name="status" id="inStock" autocomplete="off"
+                                                    {% if 'inStock' in status%} checked="true" {%endif%} value="inStock"
+                                                    onclick="this.form.submit()">
+                                                In Stock
+                                            </label>
+                                            <label class="btn bg-olive">
+                                                <input type="radio" name="status" id="expense" autocomplete="off"
+                                                    {% if 'expense' in status%} checked="true" {%endif%} value="expense"
+                                                    onclick="this.form.submit()">
+                                                Expense
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
 

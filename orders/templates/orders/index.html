@@ -68,8 +68,7 @@
                                             <th>Discount</th>
                                             <th>Total</th>
                                             <th>Paid</th>
-                                            <th>Balance</th>
-                                            <th>Delivered
+                                            <th>Balance
                                                 <br>
                                                 <form method="GET">
                                                     <input data-action="search" name="sellectedYear" id="id_q"
@@ -80,15 +79,28 @@
                                                         class="form-control form-control-navbar search" type="search"
                                                         placeholder="Search" aria-label="Search" value="{{query}}"
                                                         hidden>
-                                                    <select name="d" onchange="this.form.submit()">
+                                                    <select name="b" onchange="this.form.submit()">
                                                         <option value="" selected="selected"></option>
-                                                        <option value=True {% if "True" in d%}selected="selected"
-                                                            {%endif%}>Del
+                                                        <option value=True {% if "True" in b%}selected="selected"
+                                                            {%endif%}>With balance
                                                         </option>
-                                                        <option value=False {% if "False" in d%}selected="selected"
+                                                        <option value=False {% if "False" in b%}selected="selected"
                                                             {%endif%}>
-                                                            Not Del</option>
+                                                            Without balance</option>
                                                     </select>
+
+                                            </th>
+                                            <th>Delivered
+                                                <br>
+                                                <select name="d" onchange="this.form.submit()">
+                                                    <option value="" selected="selected"></option>
+                                                    <option value=True {% if "True" in d%}selected="selected" {%endif%}>
+                                                        Del
+                                                    </option>
+                                                    <option value=False {% if "False" in d%}selected="selected"
+                                                        {%endif%}>
+                                                        Not Del</option>
+                                                </select>
                                             </th>
                                             <th>Refund<br>
                                                 <select name="r" onchange="this.form.submit()">

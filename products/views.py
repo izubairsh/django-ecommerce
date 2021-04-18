@@ -31,6 +31,15 @@ def index(request):
     products = products.filter(
         Q(date_created__icontains=sellectedYear)
     ).distinct()
+
+    status = 'inStock'
+    if 'status' in request.GET:
+        status = request.GET['status']
+    # if status == 'inStock':
+        
+    # elif status == 'expense':
+
+
     paginator = Paginator(products, 15)
     page = request.GET.get('page')
     paged_products = paginator.get_page(page)

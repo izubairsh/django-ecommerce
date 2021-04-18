@@ -46,6 +46,7 @@ def orders(request):
         r = request.GET['r']
         if not r == "":
             orders = orders.filter(refund=r)
+    
     if 'd' in request.GET:
         d = request.GET['d']
         if not d == "":
@@ -55,6 +56,16 @@ def orders(request):
                 if order.get_status == delivered:
                     delivered_orders.append(order)
             orders = delivered_orders
+    if 'b' in request.GET:
+        b = request.GET['b']
+        if not b == "":
+            bal = 'True' in b
+            if b:
+                bal_orders = []
+                for order in orders:
+                    if order.get_balance > 0:
+                        bal_orders.append(order)
+                orders = delivered_orders
     paginator = Paginator(orders, 15)
     page = request.GET.get('page')
     paged_orders = paginator.get_page(page)
@@ -63,6 +74,7 @@ def orders(request):
         'query': q,
         'r': r,
         'd': d,
+        'b': b,
         'sellectedYear': sellectedYear
     }
     return render(request, 'orders/index.html', context)

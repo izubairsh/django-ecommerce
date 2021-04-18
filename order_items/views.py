@@ -34,7 +34,7 @@ def index(request):
     status = 'complete'
     if 'day' in request.GET:
         day = request.GET['day']
-
+    
     if 'status' in request.GET:
         status = request.GET['status']
     if status == 'complete':
