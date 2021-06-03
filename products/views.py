@@ -9,6 +9,19 @@ from datetime import datetime
 
 @login_required(login_url='login')
 def index(request):
+
+    if request.POST:
+        product_id = request.POST['id']
+        try:
+            product = Product.objects.get(id=product_id)
+        except Product.DoesNotExist:
+            product = None
+        if product:
+            status = request.POST['status']
+            if status == 'inStock':
+                product.expense = True
+            product.save()
+            
     q = ''
     categories = Category.objects.all()
     t = categories.first()
@@ -35,9 +48,10 @@ def index(request):
     status = 'inStock'
     if 'status' in request.GET:
         status = request.GET['status']
-    # if status == 'inStock':
-        
-    # elif status == 'expense':
+    if status == 'inStock':
+        products = products.filter(expense=False)
+    elif status == 'expense':
+        products = products.filter(expense=True)
 
 
     paginator = Paginator(products, 15)
@@ -48,7 +62,8 @@ def index(request):
         'query': q,
         'type': t.name,
         'categories': categories,
-        'sellectedYear': sellectedYear
+        'sellectedYear': sellectedYear,
+        'status': status
     }
     return render(request, 'products/index.html', context)
 
