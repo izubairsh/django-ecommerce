@@ -55,9 +55,7 @@
                                                     <option value="3" {% if '3' in day%} selected="selected" {%endif%}>
                                                         Day 3</option>
                                                 </select>
-                                                
-                                            </div>
-                                            <select name="type" class="form-control form-control-navbar"
+                                                <select name="type" class="form-control form-control-navbar"
                                                     onchange="this.form.submit()">
                                                 {%for c in categories%}
                                                 <option {% if type in c.name %} selected="selected" {%endif%}
@@ -65,6 +63,8 @@
                                                 </option>
                                                 {%endfor%}
                                             </select>
+                                            </div>
+                                            
                                             <h5>Total Count: {{items_count}}</h5>
                                         </div>
                                     </div>
