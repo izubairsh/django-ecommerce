@@ -58,14 +58,14 @@
                                                 
                                             </div>
                                             <select name="type" class="form-control form-control-navbar"
-                                                    onchange="this.form.submit()" hidden>
+                                                    onchange="this.form.submit()">
                                                 {%for c in categories%}
                                                 <option {% if type in c.name %} selected="selected" {%endif%}
                                                     value="{{c}}">{{c}}
                                                 </option>
                                                 {%endfor%}
                                             </select>
-                                            
+                                            <h5>Total Count: {{items_count}}</h5>
                                         </div>
                                     </div>
                                     <div class="card-tools ml-auto mr-0 ">
