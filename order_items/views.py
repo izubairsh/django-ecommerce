@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .models import OrderItem
 import datetime
 from packages.models import Package
+from products.models import Category
 import array as arr
 from datetime import datetime
 from django.db.models import Q
@@ -30,11 +31,15 @@ def index(request):
                 item.complete = False
             item.save()
     q = ''
+    categories = Category.objects.all()
+    t = categories.first()
+
     day = '1'
     status = 'complete'
     if 'day' in request.GET:
         day = request.GET['day']
-    
+    if 'type' in request.GET:
+        t = Category.objects.get(name=request.GET['type'])
     if 'status' in request.GET:
         status = request.GET['status']
     if status == 'complete':
@@ -55,6 +60,7 @@ def index(request):
         })
     items = items.exclude(package=None)
     items = items.filter(day=day)
+    items = items.filter(category=t)
     if 'q' in request.GET:
         q = request.GET['q']
         if not q == '':
@@ -78,6 +84,8 @@ def index(request):
         'status': status,
         'packages': total,
         'items_count': items_count,
-        'sellectedYear': sellectedYear
+        'sellectedYear': sellectedYear,
+        'type': t.name,
+        'categories': categories
     }
     return render(request, 'order_items/index.html', context)
