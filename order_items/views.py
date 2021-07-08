@@ -66,7 +66,8 @@ def index(request):
         if not q == '':
             items = items.filter(
                 Q(product__token__icontains=q) |
-                Q(order__id__icontains=q)
+                Q(order__id__icontains=q) |
+                Q(package__name__icontains=q)
             ).distinct()
 
     items = items.filter(
