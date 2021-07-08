@@ -69,6 +69,8 @@ def dashboard(request):
     ).distinct()
     total_cost = sum([order.get_cost for order in orders])
     total_revenue = sum([order.get_sub_total for order in orders])
+    total_discount = sum([order.get_discount for order in orders])
+    total_revenue = total_revenue - total_discount
     total_balance = sum([order.get_balance for order in orders])
     product_cost = sum([product.cost for product in products])
 
