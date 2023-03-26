@@ -1,5 +1,3 @@
-# Project Name: Butcher Shop POS System
-
 ## Description
 This is a Point of Sale (POS) system built using Django framework, with the purpose of helping a butcher shop to manage their sales and inventory. The system allows the shop owner to add, edit and delete products, view sales history, and generate reports. 
 
